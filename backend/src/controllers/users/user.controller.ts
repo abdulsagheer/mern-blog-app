@@ -5,7 +5,10 @@ import asyncHandler from "express-async-handler";
 // Importing dependencies
 import User from "../../models/user/User.model";
 
-// Register
+// ================================================================
+// Register User
+// ================================================================
+
 export const userRegister = asyncHandler(
   async (req: Request, res: Response) => {
     // Check if user is already registered
@@ -24,11 +27,22 @@ export const userRegister = asyncHandler(
   }
 );
 
-// Login
-export const userLogin = (req: Request, res: Response) => {
-  // Business logic
-  res.json({ user: "User Logged In!!" });
-};
+// ================================================================
+// Login User
+// ================================================================
+
+export const userLogin = asyncHandler(async (req: Request, res: Response) => {
+  const { email, password } = req.body;
+  // check if user is already exists
+  const userFound = await User.findOne({ email });
+  // Check if password is matched
+  if (userFound && (await userFound.isPasswordMatched(password))) {
+    res.json(userFound);
+  } else {
+    res.status(401);
+    throw new Error("Invalid Login Credentials");
+  }
+});
 
 // Fetch All Users
 export const fetchAllUsers = (req: Request, res: Response) => {
