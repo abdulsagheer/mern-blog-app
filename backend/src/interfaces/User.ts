@@ -1,27 +1,28 @@
 import { Document, ObjectId, Date } from "mongoose";
 
 export interface User extends Document {
-  firstName: String;
-  lastName: String;
-  profilePhoto: String;
-  email: String;
-  bio: String;
-  password: String;
-  postCount: Number;
-  isBlocked: Boolean;
-  isAdmin: Boolean;
-  role: String;
-  isFollowing: Boolean;
-  isUnFollowing: Boolean;
-  isAccountVerified: Boolean;
-  accountVerificationToken: String;
+  firstName: string;
+  lastName: string;
+  profilePhoto: string;
+  email: string;
+  bio: string;
+  password: string;
+  postCount: number;
+  isBlocked: boolean;
+  isAdmin: boolean;
+  role: string;
+  isFollowing: boolean;
+  isUnFollowing: boolean;
+  isAccountVerified: boolean;
+  accountVerificationToken: string;
   accountVerificationTokenExpires: Date;
   viewBy: ObjectId[];
   followers: ObjectId[];
   passwordChangeAt: Date;
-  passwordResetToken: String;
+  passwordResetToken: string;
   passwordResetExpires: Date;
-  active: Boolean;
+  active: boolean;
+  isPasswordMatched: (password: string) => boolean;
 }
 
 export enum UserStatus {
