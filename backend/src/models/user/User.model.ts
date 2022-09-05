@@ -61,7 +61,7 @@ const UserSchema = new Schema(
   }
 );
 
-// Hasing the password
+// Hashing the password
 
 UserSchema.pre("save", async function (next) {
   // hash password
@@ -69,5 +69,12 @@ UserSchema.pre("save", async function (next) {
   this.password = await bcrypt.hash(this.password, salt);
   next();
 });
+
+// Matching password
+UserSchema.methods.isPasswordMatched = async function (
+  enteredPassword: string
+) {
+  return await bcrypt.compare(enteredPassword, this.password);
+};
 
 export default model<User>("User", UserSchema);
