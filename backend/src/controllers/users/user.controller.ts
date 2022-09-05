@@ -55,7 +55,22 @@ export const userLogin = asyncHandler(async (req: Request, res: Response) => {
 });
 
 // ================================================================
-// Fetch All Users
+// Delete User By ID
+// ================================================================
+
+export const deleteUser = asyncHandler(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  validateMongodbId(id);
+  try {
+    const deletedUser = await User.findByIdAndDelete(id);
+    res.json(deletedUser);
+  } catch (error) {
+    res.json(error);
+  }
+});
+
+// ================================================================
+// Fetch All Users Details
 // ================================================================
 
 export const fetchAllUsers = asyncHandler(
@@ -71,16 +86,18 @@ export const fetchAllUsers = asyncHandler(
 );
 
 // ================================================================
-// Delete Users
+// Fetch User Details By ID
 // ================================================================
 
-export const deleteUser = asyncHandler(async (req: Request, res: Response) => {
-  const { id } = req.params;
-  validateMongodbId(id);
-  try {
-    const deletedUser = await User.findByIdAndDelete(id);
-    res.json(deletedUser);
-  } catch (error) {
-    res.json(error);
+export const fetchUserDetails = asyncHandler(
+  async (req: Request, res: Response) => {
+    const { id } = req.params;
+    validateMongodbId(id);
+    try {
+      const user = await User.findById(id);
+      res.json(user);
+    } catch (error: any) {
+      res.json(error);
+    }
   }
-});
+);
