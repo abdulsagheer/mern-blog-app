@@ -1,14 +1,20 @@
 // Importing Libraries
 import { Request, Response, NextFunction } from "express";
 
+// ================================================================
 // Handling Not Found Errors
+// ================================================================
+
 export function notFound(req: Request, res: Response, next: NextFunction) {
   const error = new Error(`Not Found: - ${req.originalUrl}`);
   res.status(404);
   next(error);
 }
 
+// ================================================================
 // Function for Handling Error
+// ================================================================
+
 export function errorHandler(
   err: Error,
   req: Request,

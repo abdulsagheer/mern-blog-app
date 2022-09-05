@@ -1,5 +1,7 @@
+// Importing Libraries
 import { Document, ObjectId, Date } from "mongoose";
 
+// Interface for User Model Schema
 export interface User extends Document {
   firstName: string;
   lastName: string;
@@ -25,6 +27,7 @@ export interface User extends Document {
   isPasswordMatched: (password: string) => boolean;
 }
 
+// Enums for User Status
 export enum UserStatus {
   Admin = "Admin",
   Guest = "Guest",

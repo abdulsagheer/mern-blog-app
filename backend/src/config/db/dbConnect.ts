@@ -1,5 +1,7 @@
+// Importing Libraries
 import mongoose, { ConnectOptions } from "mongoose";
 
+// Function to connect to MongoDB
 const dbConnect = async () => {
   try {
     await mongoose.connect(String(process.env.MONGO_URL), {

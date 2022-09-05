@@ -1,7 +1,12 @@
+// Importing Libraries
 import { Schema, model } from "mongoose";
-import { User } from "../../interfaces/User";
 import bcrypt from "bcrypt";
 
+// Importing Dependencies
+import { User } from "../../interfaces/User";
+
+
+// User Schema
 const UserSchema = new Schema(
   {
     firstName: { type: String, required: [true, "First Name is required"] },
@@ -61,7 +66,9 @@ const UserSchema = new Schema(
   }
 );
 
+// ================================================================
 // Hashing the password
+// ================================================================
 
 UserSchema.pre("save", async function (next) {
   // hash password
@@ -70,7 +77,10 @@ UserSchema.pre("save", async function (next) {
   next();
 });
 
+// ================================================================
 // Matching password
+// ================================================================
+
 UserSchema.methods.isPasswordMatched = async function (
   enteredPassword: string
 ) {
