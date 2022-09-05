@@ -4,6 +4,8 @@ import asyncHandler from "express-async-handler";
 
 // Importing dependencies
 import User from "../../models/user/User.model";
+import { generateToken } from "./../../config/token/generateToken";
+import { validateMongodbId } from "../../utils/validateMongodbID";
 
 // ================================================================
 // Register User
@@ -33,21 +35,52 @@ export const userRegister = asyncHandler(
 
 export const userLogin = asyncHandler(async (req: Request, res: Response) => {
   const { email, password } = req.body;
-  // check if user is already exists
+  // Check if user is already exists
   const userFound = await User.findOne({ email });
   // Check if password is matched
   if (userFound && (await userFound.isPasswordMatched(password))) {
-    res.json(userFound);
+    res.json({
+      _id: userFound?._id,
+      firstName: userFound?.firstName,
+      lastName: userFound?.lastName,
+      email: userFound?.email,
+      profilePhoto: userFound?.profilePhoto,
+      isAdmin: userFound?.isAdmin,
+      token: generateToken(userFound._id),
+    });
   } else {
     res.status(401);
     throw new Error("Invalid Login Credentials");
   }
 });
 
+// ================================================================
 // Fetch All Users
-export const fetchAllUsers = (req: Request, res: Response) => {
-  // Business logic
-  res.json({
-    users: ["Abdul Sagheer", "Alain", "Alain", "Sagheer", "Green", "Felon"],
-  });
-};
+// ================================================================
+
+export const fetchAllUsers = asyncHandler(
+  async (req: Request, res: Response) => {
+    // Fetch all users
+    try {
+      const users = await User.find({});
+      res.json(users);
+    } catch (error) {
+      res.json(error);
+    }
+  }
+);
+
+// ================================================================
+// Delete Users
+// ================================================================
+
+export const deleteUser = asyncHandler(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  validateMongodbId(id);
+  try {
+    const deletedUser = await User.findByIdAndDelete(id);
+    res.json(deletedUser);
+  } catch (error) {
+    res.json(error);
+  }
+});
