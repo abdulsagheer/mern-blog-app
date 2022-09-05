@@ -1,6 +1,6 @@
 // Importing Libraries
 import { Request, Response } from "express";
-import asyncHandler from "express-async-handler";
+import expressAsyncHandler from "express-async-handler";
 
 // Importing dependencies
 import User from "../../models/user/User.model";
@@ -11,7 +11,7 @@ import { validateMongodbId } from "../../utils/validateMongodbID";
 // Register User
 // ================================================================
 
-export const userRegister = asyncHandler(
+export const userRegister = expressAsyncHandler(
   async (req: Request, res: Response) => {
     // Check if user is already registered
     const userExists = await User.findOne({ email: req.body.email });
@@ -33,48 +33,54 @@ export const userRegister = asyncHandler(
 // Login User
 // ================================================================
 
-export const userLogin = asyncHandler(async (req: Request, res: Response) => {
-  const { email, password } = req.body;
-  // Check if user is already exists
-  const userFound = await User.findOne({ email });
-  // Check if password is matched
-  if (userFound && (await userFound.isPasswordMatched(password))) {
-    res.json({
-      _id: userFound?._id,
-      firstName: userFound?.firstName,
-      lastName: userFound?.lastName,
-      email: userFound?.email,
-      profilePhoto: userFound?.profilePhoto,
-      isAdmin: userFound?.isAdmin,
-      token: generateToken(userFound._id),
-    });
-  } else {
-    res.status(401);
-    throw new Error("Invalid Login Credentials");
+export const userLogin = expressAsyncHandler(
+  async (req: Request, res: Response) => {
+    const { email, password } = req.body;
+    // Check if user is already exists
+    const userFound = await User.findOne({ email });
+    // Check if password is matched
+    if (userFound && (await userFound.isPasswordMatched(password))) {
+      res.json({
+        _id: userFound?._id,
+        firstName: userFound?.firstName,
+        lastName: userFound?.lastName,
+        email: userFound?.email,
+        profilePhoto: userFound?.profilePhoto,
+        isAdmin: userFound?.isAdmin,
+        token: generateToken(userFound._id),
+      });
+    } else {
+      res.status(401);
+      throw new Error("Invalid Login Credentials");
+    }
   }
-});
+);
 
 // ================================================================
 // Delete User By ID
 // ================================================================
 
-export const deleteUser = asyncHandler(async (req: Request, res: Response) => {
-  const { id } = req.params;
-  validateMongodbId(id);
-  try {
-    const deletedUser = await User.findByIdAndDelete(id);
-    res.json(deletedUser);
-  } catch (error) {
-    res.json(error);
+export const deleteUser = expressAsyncHandler(
+  async (req: Request, res: Response) => {
+    const { id } = req.params;
+    validateMongodbId(id);
+    try {
+      const deletedUser = await User.findByIdAndDelete(id);
+      res.json(deletedUser);
+    } catch (error) {
+      res.json(error);
+    }
   }
-});
+);
 
 // ================================================================
 // Fetch All Users Details
 // ================================================================
 
-export const fetchAllUsers = asyncHandler(
+export const fetchAllUsers = expressAsyncHandler(
   async (req: Request, res: Response) => {
+    console.log(req.headers);
+
     // Fetch all users
     try {
       const users = await User.find({});
@@ -89,8 +95,9 @@ export const fetchAllUsers = asyncHandler(
 // Fetch User Details By ID
 // ================================================================
 
-export const fetchUserDetails = asyncHandler(
+export const fetchUserDetails = expressAsyncHandler(
   async (req: Request, res: Response) => {
+    // Fetch Single User Details By ID
     const { id } = req.params;
     validateMongodbId(id);
     try {
