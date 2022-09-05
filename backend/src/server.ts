@@ -7,7 +7,7 @@ import * as dotenv from "dotenv";
 // Importing dependencies
 import dbConnect from "./config/db/dbConnect";
 import userRoute from "./routes/users/userRoute";
-import errorHandler from "./middlewares/error/errorHandler";
+import { errorHandler, notFound } from "./middlewares/error/errorHandler";
 dotenv.config();
 
 // DB configuration
@@ -30,6 +30,7 @@ app.get("/", (req: Request, res: Response) => {
 app.use("/api/users", userRoute);
 
 // Error Handler
+app.use(notFound);
 app.use(errorHandler);
 
 // Server
