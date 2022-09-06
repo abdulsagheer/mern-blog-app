@@ -8,6 +8,9 @@ import {
   fetchAllUsers,
   deleteUser,
   fetchUserDetails,
+  userProfile,
+  updateUserProfile,
+  updateUserPassword,
 } from "../../controllers/users/user.controller";
 import { authMiddleware } from "../../middlewares/auth/authMiddleware";
 const userRoute = express.Router();
@@ -29,6 +32,24 @@ userRoute.post("/login", userLogin);
 // ================================================================
 
 userRoute.get("/", authMiddleware, fetchAllUsers);
+
+// ================================================================
+// Update User Password
+// ================================================================
+
+userRoute.put("/password", authMiddleware, updateUserPassword);
+
+// ================================================================
+// Fetch User Profile
+// ================================================================
+
+userRoute.get("/profile/:id", authMiddleware, userProfile);
+
+// ================================================================
+// Update User Profile
+// ================================================================
+
+userRoute.put("/:id", authMiddleware, updateUserProfile);
 
 // ================================================================
 // Delete all users
