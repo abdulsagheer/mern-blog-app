@@ -1,6 +1,5 @@
 // Importing Libraries
 import express, { Application, Request, Response } from "express";
-import bodyParser from "body-parser";
 import cors from "cors";
 import * as dotenv from "dotenv";
 
@@ -17,8 +16,8 @@ dbConnect();
 const app: Application = express();
 
 // Using Middleware
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 app.use(cors({ origin: "http://localhost:5000" }));
 
 // Testing Server
