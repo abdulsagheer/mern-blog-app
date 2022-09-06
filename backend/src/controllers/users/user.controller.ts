@@ -1,4 +1,5 @@
 // Importing Libraries
+import mongoose from "mongoose";
 import { Request, Response } from "express";
 import expressAsyncHandler from "express-async-handler";
 
@@ -105,6 +106,73 @@ export const fetchUserDetails = expressAsyncHandler(
       res.json(user);
     } catch (error: any) {
       res.json(error);
+    }
+  }
+);
+
+// ================================================================
+// Fetch User Profile
+// ================================================================
+export const userProfile = expressAsyncHandler(
+  async (req: Request, res: Response) => {
+    // User profile fetching
+    const { id } = req.params;
+    validateMongodbId(id);
+
+    try {
+      const profile = await User.findById(id);
+      res.json(profile);
+    } catch (error: any) {
+      res.json(error);
+    }
+  }
+);
+
+// ================================================================
+// Update User Profile
+// ================================================================
+export const updateUserProfile = expressAsyncHandler(
+  async (req: any, res: Response) => {
+    // Update User profile
+    const { _id } = req?.user;
+    validateMongodbId(_id);
+    const user = await User.findOneAndUpdate(
+      { _id: new mongoose.Types.ObjectId(_id) },
+      {
+        firstName: req?.body?.firstName,
+        lastName: req?.body?.lastName,
+        email: req?.body?.email,
+        bio: req?.body?.bio,
+      },
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
+    res.json(user);
+  }
+);
+
+// ================================================================
+// Update Password
+// ================================================================
+export const updateUserPassword = expressAsyncHandler(
+  async (req: any, res: Response) => {
+    //destructure the login user
+    const { _id } = req.user;
+    const { password } = req.body;
+    validateMongodbId(_id);
+    //Find the user by _id
+    const user = await User.findById(_id);
+
+    if (password) {
+      console.log(user);
+      console.log(password);
+      user.password = password;
+      const updatedUser = await user.save();
+      res.json(updatedUser);
+    } else {
+      res.json(user);
     }
   }
 );
