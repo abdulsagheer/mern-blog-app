@@ -1,12 +1,18 @@
 // Importing Libraries
+import * as dotenv from "dotenv";
+dotenv.config();
 import mongoose from "mongoose";
 import { Request, Response } from "express";
+import sgMail from "@sendgrid/mail";
 import expressAsyncHandler from "express-async-handler";
 
 // Importing dependencies
 import User from "../../models/user/User.model";
 import { generateToken } from "./../../config/token/generateToken";
 import { validateMongodbId } from "../../utils/validateMongodbID";
+
+// API Key for Send Grid
+sgMail.setApiKey(process.env.SEND_GRID_API_KEY);
 
 // ================================================================
 // Register User
@@ -182,6 +188,7 @@ export const updateUserPassword = expressAsyncHandler(
 // ================================================================
 export const followingUser = expressAsyncHandler(
   async (req: any, res: Response) => {
+    // ID of logged in user and target User(the user you want to follow)
     const { followId } = req.body;
     const loggedInUserId = req.user.id;
 
@@ -193,19 +200,132 @@ export const followingUser = expressAsyncHandler(
       (user) => user?.toString() === loggedInUserId.toString()
     );
     console.log(alreadyFollowing);
-    // Find the user you want to follow and update its followers field
     if (alreadyFollowing) throw new Error(`Already following ${targetUser}`);
-    await User.findByIdAndUpdate(followId, {
-      $push: {
-        followers: loggedInUserId,
+    // Find the user you want to follow and update its followers field
+    await User.findByIdAndUpdate(
+      followId,
+      {
+        $push: {
+          followers: loggedInUserId,
+        },
+        isFollowing: true,
       },
-    });
+      {
+        new: true,
+      }
+    );
     // 2. Update the logged in user following field
-    await User.findByIdAndUpdate(loggedInUserId, {
-      $push: {
-        following: followId,
+    await User.findByIdAndUpdate(
+      loggedInUserId,
+      {
+        $push: {
+          following: followId,
+        },
       },
-    });
+      {
+        new: true,
+      }
+    );
     res.json("You have successfully followed this user");
+  }
+);
+
+// ================================================================
+// Unfollow Other Users
+// ================================================================
+export const unfollowUser = expressAsyncHandler(
+  async (req: any, res: Response) => {
+    // ID of logged in user and target User(the user you want to follow)
+    const { unFollowId } = req.body;
+    const loggedInUserId = req.user.id;
+    await User.findByIdAndUpdate(
+      unFollowId,
+      {
+        $pull: {
+          followers: loggedInUserId,
+        },
+        isFollowing: false,
+      },
+      {
+        new: true,
+      }
+    );
+    await User.findByIdAndUpdate(
+      loggedInUserId,
+      {
+        $pull: {
+          following: unFollowId,
+        },
+      },
+      {
+        new: true,
+      }
+    );
+    res.json("You have successfully unfollowed this user");
+  }
+);
+
+// ================================================================
+// Block Other Users
+// ================================================================
+export const blockUser = expressAsyncHandler(
+  async (req: any, res: Response) => {
+    // ID of logged in user and target User(the user you want to follow)
+    const { id } = req.params;
+    validateMongodbId(id);
+    const user = await User.findByIdAndUpdate(
+      id,
+      {
+        isBlocked: true,
+      },
+      {
+        new: true,
+      }
+    );
+    res.json(user);
+    res.json("You have successfully Blocked this user");
+  }
+);
+
+// ================================================================
+// UnBlock Other Users
+// ================================================================
+export const unblockUser = expressAsyncHandler(
+  async (req: any, res: Response) => {
+    // ID of logged in user and target User(the user you want to follow)
+    const { id } = req.params;
+    validateMongodbId(id);
+    const user = await User.findByIdAndUpdate(
+      id,
+      {
+        isBlocked: false,
+      },
+      {
+        new: true,
+      }
+    );
+    res.json(user);
+    res.json("You have successfully Blocked this user");
+  }
+);
+
+// ================================================================
+// Email Verification
+// ================================================================
+export const generateVerificationToken = expressAsyncHandler(
+  async (req: any, res: Response) => {
+    try {
+      // Build Message
+      const msg = {
+        to: "abdulsagheer35@gmail.com",
+        from: "abdulsagheeras29@gmail.com",
+        subject: "My First Message",
+        text: "Hi, I used Twillio for the first time",
+      };
+      await sgMail.send(msg);
+      res.json("Email send Succeded!!");
+    } catch (error) {
+      res.json("Email send failed");
+    }
   }
 );

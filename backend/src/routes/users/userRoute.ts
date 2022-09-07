@@ -12,7 +12,12 @@ import {
   updateUserProfile,
   updateUserPassword,
   followingUser,
+  unfollowUser,
+  blockUser,
+  unblockUser,
+  generateVerificationToken,
 } from "../../controllers/users/user.controller";
+
 import { authMiddleware } from "../../middlewares/auth/authMiddleware";
 const userRoute = express.Router();
 
@@ -44,7 +49,31 @@ userRoute.put("/password", authMiddleware, updateUserPassword);
 // Following User
 // ================================================================
 
-userRoute.put("/:id", authMiddleware, followingUser);
+userRoute.put("/follow", authMiddleware, followingUser);
+
+// ================================================================
+// Send Email Verification
+// ================================================================
+
+userRoute.post("/send-email", authMiddleware, generateVerificationToken);
+
+// ================================================================
+// unFollow User
+// ================================================================
+
+userRoute.put("/unfollow", authMiddleware, unfollowUser);
+
+// ================================================================
+// Block User
+// ================================================================
+
+userRoute.put("/block/:id", authMiddleware, blockUser);
+
+// ================================================================
+// UnBlock User
+// ================================================================
+
+userRoute.put("/unblock/:id", authMiddleware, unblockUser);
 
 // ================================================================
 // Fetch User Profile
