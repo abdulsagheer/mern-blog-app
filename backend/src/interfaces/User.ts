@@ -26,6 +26,7 @@ export interface User extends Document {
   passwordResetExpires: Date;
   active: boolean;
   isPasswordMatched: (password: string) => boolean;
+  createAccountVerificationToken: () => string;
 }
 
 // Enums for User Status

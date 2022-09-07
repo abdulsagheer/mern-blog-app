@@ -1,6 +1,7 @@
 // Importing Libraries
 import { Schema, model } from "mongoose";
 import bcrypt from "bcrypt";
+import crypto from "crypto";
 
 // Importing Dependencies
 import { User } from "../../interfaces/User";
@@ -95,6 +96,21 @@ UserSchema.methods.isPasswordMatched = async function (
   enteredPassword: string
 ) {
   return await bcrypt.compare(enteredPassword, this.password);
+};
+
+// ================================================================
+// Verify Account
+// ================================================================
+
+UserSchema.methods.createAccountVerificationToken = async function () {
+  //create a token
+  const verificationToken = crypto.randomBytes(32).toString("hex");
+  this.accountVerificationToken = crypto
+    .createHash("sha256")
+    .update(verificationToken)
+    .digest("hex");
+  this.accountVerificationTokenExpires = Date.now() + 30 * 60 * 1000; //10 minutes
+  return verificationToken;
 };
 
 export default model<User>("User", UserSchema);

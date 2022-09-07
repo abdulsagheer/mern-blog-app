@@ -5,6 +5,7 @@ import mongoose from "mongoose";
 import { Request, Response } from "express";
 import sgMail from "@sendgrid/mail";
 import expressAsyncHandler from "express-async-handler";
+import crypto from "crypto";
 
 // Importing dependencies
 import User from "../../models/user/User.model";
@@ -310,22 +311,55 @@ export const unblockUser = expressAsyncHandler(
 );
 
 // ================================================================
-// Email Verification
+// Generate Email Verification Token
 // ================================================================
 export const generateVerificationToken = expressAsyncHandler(
   async (req: any, res: Response) => {
+    const loginUserId = req.user.id;
+    const user = await User.findById(loginUserId);
+    console.log(loginUserId);
     try {
+      // Generate token
+      const verificationToken = await user.createAccountVerificationToken();
+      await user.save();
+      console.log(verificationToken);
       // Build Message
+      const resetURL = `If you were requested to verify your account, verify now within 10 minutes, otherwise ignore this message <a href="http://localhost:3000/verify-account/${verificationToken}">Click to verify your account</a>`;
       const msg = {
         to: "abdulsagheer35@gmail.com",
         from: "abdulsagheeras29@gmail.com",
         subject: "My First Message",
-        text: "Hi, I used Twillio for the first time",
+        html: resetURL,
       };
       await sgMail.send(msg);
       res.json("Email send Succeded!!");
     } catch (error) {
       res.json("Email send failed");
     }
+  }
+);
+
+// ================================================================
+//Account verification
+// ================================================================
+
+export const accountVerification = expressAsyncHandler(
+  async (req: any, res: Response) => {
+    const { token } = req.body;
+    const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
+
+    //find this user by token
+
+    const userFound = await User.findOne({
+      accountVerificationToken: hashedToken,
+      accountVerificationTokenExpires: { $gt: new Date() },
+    });
+    if (!userFound) throw new Error("Token expired, try again later");
+    //update the property to true
+    userFound.isAccountVerified = true;
+    userFound.accountVerificationToken = undefined;
+    userFound.accountVerificationTokenExpires = undefined;
+    await userFound.save();
+    res.json(userFound);
   }
 );

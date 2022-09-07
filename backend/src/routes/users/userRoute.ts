@@ -1,3 +1,4 @@
+import { accountVerification } from "./../../controllers/users/user.controller";
 // Importing Libraries
 import express from "express";
 
@@ -52,10 +53,20 @@ userRoute.put("/password", authMiddleware, updateUserPassword);
 userRoute.put("/follow", authMiddleware, followingUser);
 
 // ================================================================
-// Send Email Verification
+// Generate Email Verification Token
 // ================================================================
 
-userRoute.post("/send-email", authMiddleware, generateVerificationToken);
+userRoute.post(
+  "/generate-verify-email-token",
+  authMiddleware,
+  generateVerificationToken
+);
+
+// ================================================================
+//  Verify Email
+// ================================================================
+
+userRoute.post("/verify-account", authMiddleware, accountVerification);
 
 // ================================================================
 // unFollow User
