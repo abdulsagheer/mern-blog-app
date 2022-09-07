@@ -11,6 +11,7 @@ import {
   userProfile,
   updateUserProfile,
   updateUserPassword,
+  followingUser,
 } from "../../controllers/users/user.controller";
 import { authMiddleware } from "../../middlewares/auth/authMiddleware";
 const userRoute = express.Router();
@@ -38,6 +39,12 @@ userRoute.get("/", authMiddleware, fetchAllUsers);
 // ================================================================
 
 userRoute.put("/password", authMiddleware, updateUserPassword);
+
+// ================================================================
+// Following User
+// ================================================================
+
+userRoute.put("/:id", authMiddleware, followingUser);
 
 // ================================================================
 // Fetch User Profile

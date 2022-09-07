@@ -176,3 +176,36 @@ export const updateUserPassword = expressAsyncHandler(
     }
   }
 );
+
+// ================================================================
+// Following Other Users
+// ================================================================
+export const followingUser = expressAsyncHandler(
+  async (req: any, res: Response) => {
+    const { followId } = req.body;
+    const loggedInUserId = req.user.id;
+
+    // Find the target User(the user you want to follow) and check if the login id is already in the followers field
+    const targetUser = await User.findById(followId);
+    console.log(targetUser);
+    // Checking if you are already in the followers fields of target User(the user you want to follow)
+    const alreadyFollowing = targetUser?.followers?.find(
+      (user) => user?.toString() === loggedInUserId.toString()
+    );
+    console.log(alreadyFollowing);
+    // Find the user you want to follow and update its followers field
+    if (alreadyFollowing) throw new Error(`Already following ${targetUser}`);
+    await User.findByIdAndUpdate(followId, {
+      $push: {
+        followers: loggedInUserId,
+      },
+    });
+    // 2. Update the logged in user following field
+    await User.findByIdAndUpdate(loggedInUserId, {
+      $push: {
+        following: followId,
+      },
+    });
+    res.json("You have successfully followed this user");
+  }
+);

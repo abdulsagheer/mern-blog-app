@@ -46,6 +46,14 @@ const UserSchema = new Schema(
         },
       ],
     },
+    following: {
+      type: [
+        {
+          type: Schema.Types.ObjectId,
+          ref: "User",
+        },
+      ],
+    },
     passwordChangeAt: Date,
     passwordResetToken: String,
     passwordResetExpires: Date,

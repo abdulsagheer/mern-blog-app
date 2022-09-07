@@ -20,6 +20,7 @@ export interface User extends Document {
   accountVerificationTokenExpires: Date;
   viewBy: ObjectId[];
   followers: ObjectId[];
+  following: ObjectId[];
   passwordChangeAt: Date;
   passwordResetToken: string;
   passwordResetExpires: Date;
