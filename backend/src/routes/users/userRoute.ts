@@ -17,6 +17,8 @@ import {
   blockUser,
   unblockUser,
   generateVerificationToken,
+  forgetPasswordToken,
+  passwordReset,
 } from "../../controllers/users/user.controller";
 
 import { authMiddleware } from "../../middlewares/auth/authMiddleware";
@@ -39,6 +41,18 @@ userRoute.post("/login", userLogin);
 // ================================================================
 
 userRoute.get("/", authMiddleware, fetchAllUsers);
+
+// ================================================================
+// Forget Password Token
+// ================================================================
+
+userRoute.post("/forget-password-token", forgetPasswordToken);
+
+// ================================================================
+// Reset Password
+// ================================================================
+
+userRoute.put("/reset-password", passwordReset);
 
 // ================================================================
 // Update User Password
