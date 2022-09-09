@@ -6,6 +6,7 @@ import * as dotenv from "dotenv";
 // Importing dependencies
 import dbConnect from "./config/db/dbConnect";
 import userRoute from "./routes/users/userRoute";
+import postRoute from "./routes/post/postRoute";
 import { errorHandler, notFound } from "./middlewares/error/errorHandler";
 dotenv.config();
 
@@ -27,6 +28,8 @@ app.get("/", (req: Request, res: Response) => {
 
 // Using User Routes to CRUD Operations
 app.use("/api/users", userRoute);
+// Using Post Routes to CRUD Operations
+app.use("/api/post", postRoute);
 
 // Error Handler
 app.use(notFound);
