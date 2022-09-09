@@ -11,6 +11,7 @@ import crypto from "crypto";
 import User from "../../models/user/User.model";
 import { generateToken } from "./../../config/token/generateToken";
 import { validateMongodbId } from "../../utils/validateMongodbID";
+import { cloudinaryUploadImg } from "../../utils/uploadToCloudinary";
 
 // API Key for Send Grid
 sgMail.setApiKey(process.env.SEND_GRID_API_KEY);
@@ -427,5 +428,30 @@ export const passwordReset = expressAsyncHandler(
     user.passwordResetExpires = undefined;
     await user.save();
     res.json(user);
+  }
+);
+
+// ================================================================
+// Profile photo upload
+// ================================================================
+
+export const profilePhotoUploading = expressAsyncHandler(
+  async (req: any, res: Response) => {
+    //Find the login user
+    const { _id } = req?.user;
+
+    //1. Get the path to img
+    const localPath = `public/images/profile/${req.file.filename}`;
+    //2.Upload to cloudinary
+    const imgUploaded = await cloudinaryUploadImg(localPath);
+
+    const foundUser = await User.findByIdAndUpdate(
+      _id,
+      {
+        profilePhoto: imgUploaded?.url,
+      },
+      { new: true }
+    );
+    res.json(foundUser);
   }
 );

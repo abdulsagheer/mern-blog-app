@@ -1,4 +1,3 @@
-import { accountVerification } from "./../../controllers/users/user.controller";
 // Importing Libraries
 import express from "express";
 
@@ -19,7 +18,13 @@ import {
   generateVerificationToken,
   forgetPasswordToken,
   passwordReset,
+  profilePhotoUploading,
+  accountVerification,
 } from "../../controllers/users/user.controller";
+import {
+  profilePhotoUploads,
+  profilePhotoResize,
+} from "../../middlewares/uploads/profilePhotoUploads";
 
 import { authMiddleware } from "../../middlewares/auth/authMiddleware";
 const userRoute = express.Router();
@@ -35,6 +40,21 @@ userRoute.post("/register", userRegister);
 // ================================================================
 
 userRoute.post("/login", userLogin);
+
+// ================================================================
+// Profile Photo Upload
+// ================================================================
+
+userRoute.put(
+  "/profile-photo-upload",
+  authMiddleware,
+  [
+    profilePhotoUploads.single("image"),
+    (req: any, res: any) => res.json({ file: req.file }),
+  ],
+  profilePhotoResize,
+  profilePhotoUploading
+);
 
 // ================================================================
 // Fetch all users
