@@ -1,15 +1,45 @@
 // Importing Libraries
-import express from "express";
+import express, { NextFunction } from "express";
 
 // Importing dependencies
-import { createPost } from "../../controllers/posts/post.controller";
+import { postImageResize } from "./../../middlewares/uploads/photoUploads";
+import {
+  createPost,
+  fetchAllPosts,
+  fetchSinglePost,
+} from "../../controllers/posts/post.controller";
 import { authMiddleware } from "../../middlewares/auth/authMiddleware";
+import { photoUploads } from "../../middlewares/uploads/photoUploads";
 const postRoute = express.Router();
 
 // ================================================================
 // Create Post
 // ================================================================
 
-postRoute.post("/create-post", authMiddleware, createPost);
+postRoute.post(
+  "/create-post",
+  authMiddleware,
+  [
+    photoUploads.single("image"),
+    (req: any, res: any, next: NextFunction) => {
+      console.log(req.file, req.body);
+      next();
+    },
+  ],
+  postImageResize,
+  createPost
+);
+
+// ================================================================
+// Fetch All Post
+// ================================================================
+
+postRoute.get("/", authMiddleware, fetchAllPosts);
+
+// ================================================================
+// Fetch Single Post
+// ================================================================
+
+postRoute.get("/:id", authMiddleware, fetchSinglePost);
 
 export default postRoute;

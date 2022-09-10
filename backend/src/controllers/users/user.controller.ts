@@ -4,6 +4,7 @@ dotenv.config();
 import mongoose from "mongoose";
 import { Request, Response } from "express";
 import sgMail from "@sendgrid/mail";
+import fs from "fs";
 import expressAsyncHandler from "express-async-handler";
 import crypto from "crypto";
 
@@ -128,7 +129,7 @@ export const userProfile = expressAsyncHandler(
     validateMongodbId(id);
 
     try {
-      const profile = await User.findById(id);
+      const profile = await User.findById(id).populate('posts');
       res.json(profile);
     } catch (error: any) {
       res.json(error);
@@ -441,7 +442,7 @@ export const profilePhotoUploading = expressAsyncHandler(
     const { _id } = req?.user;
 
     //1. Get the path to img
-    const localPath = `public/images/profile/${req.file.filename}`;
+    const localPath = `src/public/image/profile/${req.file.filename}`;
     //2.Upload to cloudinary
     const imgUploaded = await cloudinaryUploadImg(localPath);
 
@@ -452,6 +453,8 @@ export const profilePhotoUploading = expressAsyncHandler(
       },
       { new: true }
     );
-    res.json(foundUser);
+    // Remove the saved image
+    fs.unlinkSync(localPath);
+    res.json(imgUploaded);
   }
 );

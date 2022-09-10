@@ -25,7 +25,7 @@ const multerFilter = (req: Request, file: Express.Multer.File, cb: any) => {
   }
 };
 
-export const profilePhotoUploads = multer({
+export const photoUploads = multer({
   storage: multerStorage,
   fileFilter: multerFilter,
   limits: { fileSize: 1000000 },
@@ -36,18 +36,40 @@ export const profilePhotoUploads = multer({
 // ================================================================
 
 export const profilePhotoResize = async (
-  req: Request,
+  req: any,
   res: Response,
   next: NextFunction
 ) => {
   //check if there is no file
   if (!req.file) return next();
-  req.file.filename = `user-${Date.now()}-${req.file.originalname}`;
+  req.file.filename = `${Date.now()}-${req.file.originalname}`;
 
   await sharp(req.file.buffer)
     .resize(250, 250)
     .toFormat("jpeg")
     .jpeg({ quality: 90 })
-    .toFile(path.join(`public/images/profile/${req.file.filename}`));
+    .toFile(path.join(`src/public/image/profile/${req.file.filename}`));
+  next();
+};
+
+// ================================================================
+// Post Image Resizing
+// ================================================================
+
+export const postImageResize = async (
+  req: any,
+  res: Response,
+  next: NextFunction
+) => {
+  //Find the login user
+  //check if there is no file
+  if (!req.file) return next();
+  req.file.filename = `${Date.now()}-${req.file.originalname}`;
+
+  await sharp(req.file.buffer)
+    .resize(500, 500)
+    .toFormat("jpeg")
+    .jpeg({ quality: 90 })
+    .toFile(path.join(`src/public/image/post/${req.file.filename}`));
   next();
 };
