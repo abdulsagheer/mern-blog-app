@@ -5,10 +5,10 @@ const PostSchema = new Schema(
   {
     title: {
       type: String,
-      required: true,
+      required: [true, "Post title is required"],
       trim: true,
     },
-    // Created by only category
+    //Created by only category
     category: {
       type: String,
       required: [true, "Post category is required"],
@@ -32,19 +32,25 @@ const PostSchema = new Schema(
         ref: "User",
       },
     ],
+    dislikes: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
     user: {
       type: Schema.Types.ObjectId,
       ref: "User",
-      required: [true, "Please Author is Required"],
+      required: [true, "Please Author is required"],
     },
     description: {
       type: String,
-      required: [true, "Post description is Required"],
+      required: [true, "Post description is required"],
     },
     image: {
       type: String,
       default:
-        "https://www.google.com/imgres?imgurl=https%3A%2F%2Fwww.deleuzegroup.com%2Fwp-content%2Fthemes%2Fazoomtheme%2Fimages%2Fdemo%2Fdemo-image-default.jpg%3Fx20736&imgrefurl=https%3A%2F%2Fdeleuzegroup.com%2Fdefault-item%2Fretina-icons%2F&tbnid=nj98n8t5EGk4sM&vet=12ahUKEwiEn878j4j6AhURjNgFHTB-DK8QMygEegUIARC8AQ..i&docid=nP1tc3idLFOkQM&w=1920&h=1080&q=post%20default%20image&ved=2ahUKEwiEn878j4j6AhURjNgFHTB-DK8QMygEegUIARC8AQ",
+        "https://cdn.pixabay.com/photo/2020/10/25/09/23/seagull-5683637_960_720.jpg",
     },
   },
   {

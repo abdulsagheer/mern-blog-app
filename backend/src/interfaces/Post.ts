@@ -8,7 +8,8 @@ export interface Post extends Document {
   isLiked: boolean;
   isDisliked: boolean;
   numViews: number;
-  likes: ObjectId;
+  likes: ObjectId[];
+  dislikes: ObjectId[];
   user: ObjectId;
   description: string;
   image: string;

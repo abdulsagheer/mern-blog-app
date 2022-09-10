@@ -2,16 +2,20 @@
 import express, { NextFunction } from "express";
 
 // Importing dependencies
-import { postImageResize } from "./../../middlewares/uploads/photoUploads";
 import {
   createPost,
   fetchAllPosts,
   fetchSinglePost,
   updatePost,
   deletePost,
+  likePost,
+  dislikePost,
 } from "../../controllers/posts/post.controller";
 import { authMiddleware } from "../../middlewares/auth/authMiddleware";
-import { photoUploads } from "../../middlewares/uploads/photoUploads";
+import {
+  photoUploads,
+  postImageResize,
+} from "../../middlewares/uploads/photoUploads";
 const postRoute = express.Router();
 
 // ================================================================
@@ -31,6 +35,17 @@ postRoute.post(
   postImageResize,
   createPost
 );
+
+// ================================================================
+// Like Post
+// ================================================================
+
+postRoute.put("/likes", authMiddleware, likePost);
+// ================================================================
+// Dislike Post
+// ================================================================
+
+postRoute.put("/dislikes", authMiddleware, dislikePost);
 
 // ================================================================
 // Fetch All Post
