@@ -1,10 +1,13 @@
+// Importing Libraries
 import cloudinary from "cloudinary";
+import * as dotenv from "dotenv";
+dotenv.config();
 
 // Setting up cloudinary configuration
 cloudinary.v2.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
+  cloud_name: process.env.CLOUDARY_NAME,
+  api_key: process.env.CLOUDARY_API_KEY,
+  api_secret: process.env.CLOUDARY_API_SECRET_KEY,
 });
 
 export const cloudinaryUploadImg = async (fileToUpload) => {
