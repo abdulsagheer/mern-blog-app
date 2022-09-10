@@ -1,3 +1,4 @@
+import { NextFunction } from "express";
 // Importing Libraries
 import express from "express";
 
@@ -22,9 +23,9 @@ import {
   accountVerification,
 } from "../../controllers/users/user.controller";
 import {
-  profilePhotoUploads,
+  photoUploads,
   profilePhotoResize,
-} from "../../middlewares/uploads/profilePhotoUploads";
+} from "../../middlewares/uploads/photoUploads";
 
 import { authMiddleware } from "../../middlewares/auth/authMiddleware";
 const userRoute = express.Router();
@@ -49,8 +50,11 @@ userRoute.put(
   "/profile-photo-upload",
   authMiddleware,
   [
-    profilePhotoUploads.single("image"),
-    (req: any, res: any) => res.json({ file: req.file }),
+    photoUploads.single("image"),
+    (req: any, res: any, next: NextFunction) => {
+      console.log(req.file, req.body);
+      next();
+    },
   ],
   profilePhotoResize,
   profilePhotoUploading
