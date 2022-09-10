@@ -60,7 +60,10 @@ export const createPost = expressAsyncHandler(
 export const fetchAllPosts = expressAsyncHandler(
   async (req: any, res: Response) => {
     try {
-      const posts = await Post.find({}).populate("user");
+      const posts = await await Post.find({})
+        .populate("user")
+        .populate("dislikes")
+        .populate("likes");
       res.json(posts);
     } catch (error) {
       res.json(error);
@@ -77,7 +80,11 @@ export const fetchSinglePost = expressAsyncHandler(
     const { id } = req.params;
     // validateMongodbId(id);
     try {
-      const post = await Post.findById(id).populate("user");
+      const post = await Post.findById(id)
+        .populate("user")
+        .populate("dislikes")
+        .populate(await Post.find({}).populate("user").populate("dislikes"))
+        .populate("likes");
       // Update number of views
       await Post.findByIdAndUpdate(
         id,
