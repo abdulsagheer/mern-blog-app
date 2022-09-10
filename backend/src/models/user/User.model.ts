@@ -75,6 +75,15 @@ const UserSchema = new Schema(
 );
 
 // ================================================================
+// Virtual Method to populate created postCount
+// ================================================================
+UserSchema.virtual("posts", {
+  ref: "Post",
+  foreignField: "user",
+  localField: "_id",
+});
+
+// ================================================================
 // Hashing the password
 // ================================================================
 
