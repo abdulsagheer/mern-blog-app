@@ -74,11 +74,64 @@ export const fetchAllPosts = expressAsyncHandler(
 
 export const fetchSinglePost = expressAsyncHandler(
   async (req: Request, res: Response) => {
+    const { id } = req.params;
+    validateMongodbId(id);
     try {
-      const { id } = req.params;
-      validateMongodbId(id);
-      const post = await (await Post.findById(id)).populate("user");
+      const post = await Post.findById(id).populate("user");
+      // Update number of views
+      await Post.findByIdAndUpdate(
+        id,
+        {
+          $inc: {
+            numViews: +1,
+          },
+        },
+        {
+          new: true,
+        }
+      );
       res.json(post);
+    } catch (error) {
+      res.json(error);
+    }
+  }
+);
+
+// ================================================================
+// Update Post
+// ================================================================
+
+export const updatePost = expressAsyncHandler(
+  async (req: any, res: Response) => {
+    const { id } = req.params;
+    validateMongodbId(id);
+    try {
+      const post = await Post.findByIdAndUpdate(
+        id,
+        {
+          ...req.body,
+          user: req.user?._id,
+        },
+        { new: true }
+      );
+      res.json(post);
+    } catch (error) {
+      res.json(error);
+    }
+  }
+);
+
+// ================================================================
+// Delete Post
+// ================================================================
+
+export const deletePost = expressAsyncHandler(
+  async (req: any, res: Response) => {
+    const { id } = req.params;
+    validateMongodbId(id);
+    try {
+      const deletedPost = await Post.findByIdAndDelete(id);
+      res.json(deletedPost);
     } catch (error) {
       res.json(error);
     }

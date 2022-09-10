@@ -7,6 +7,8 @@ import {
   createPost,
   fetchAllPosts,
   fetchSinglePost,
+  updatePost,
+  deletePost,
 } from "../../controllers/posts/post.controller";
 import { authMiddleware } from "../../middlewares/auth/authMiddleware";
 import { photoUploads } from "../../middlewares/uploads/photoUploads";
@@ -41,5 +43,17 @@ postRoute.get("/", authMiddleware, fetchAllPosts);
 // ================================================================
 
 postRoute.get("/:id", authMiddleware, fetchSinglePost);
+
+// ================================================================
+// Update Post
+// ================================================================
+
+postRoute.put("/:id", authMiddleware, updatePost);
+
+// ================================================================
+// Delete Post
+// ================================================================
+
+postRoute.delete("/:id", authMiddleware, deletePost);
 
 export default postRoute;
