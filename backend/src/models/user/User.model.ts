@@ -3,7 +3,7 @@ import { Schema, model } from "mongoose";
 import bcrypt from "bcrypt";
 import crypto from "crypto";
 
-// Importing Dependencies
+// Importing Types
 import { User } from "../../interfaces/User";
 
 // User Schema

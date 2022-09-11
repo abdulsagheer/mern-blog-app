@@ -9,6 +9,7 @@ import userRoute from "./routes/users/userRoute";
 import postRoute from "./routes/post/postRoute";
 import { errorHandler, notFound } from "./middlewares/error/errorHandler";
 import commentRoute from "./routes/comments/commentRoute";
+import emailMessageRoute from "./routes/emailMessage/emailMessage";
 dotenv.config();
 
 // ================================================================
@@ -47,6 +48,10 @@ app.use("/api/post", postRoute);
 // Comment Routes
 // ================================================================
 app.use("/api/comment", commentRoute);
+// ================================================================
+// Email Message Routes
+// ================================================================
+app.use("/api/email", emailMessageRoute);
 
 // ================================================================
 // Error Handler

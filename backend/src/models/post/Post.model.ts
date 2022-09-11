@@ -1,4 +1,7 @@
+// Importing Libraries
 import { Schema, model } from "mongoose";
+
+// Importing Types
 import { Post } from "../../interfaces/Post";
 
 const PostSchema = new Schema(
