@@ -5,7 +5,7 @@ import sgMail from "@sendgrid/mail";
 import Filter from "bad-words";
 
 // Importing Dependencies
-import EmailMessage from "../../models/EmailMessage/EmailMessage.model";
+import EmailMessage from "../../models/emailMessage/EmailMessage.model";
 
 // ================================================================
 // Create Post

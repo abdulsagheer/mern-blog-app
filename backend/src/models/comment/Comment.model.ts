@@ -1,4 +1,7 @@
+// Importing Libraries
 import { Schema, model } from "mongoose";
+
+// Importing Types
 import { Comment } from "../../interfaces/Comment";
 
 const CommentSchema = new Schema(
