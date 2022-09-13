@@ -1,5 +1,5 @@
 import { userAuth } from "./../../../Interfaces/userAuth";
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
 // ================================================================
@@ -39,7 +39,7 @@ const initialState: userAuth = {
   loading: false,
 };
 
-const userSlice = createSlice({
+const userSlices = createSlice({
   name: "users",
   initialState,
   reducers: {},
@@ -64,33 +64,22 @@ const userSlice = createSlice({
   //   },
   // },
   extraReducers: (builder) => {
-    // Register
-    builder.addCase(
-      registerUserAction.pending,
-      (state = initialState, action: PayloadAction) => {
-        state.loading = true;
-        state.appError = undefined;
-        state.serverError = undefined;
-      }
-    );
-    builder.addCase(
-      registerUserAction.fullfiled,
-      (state = initialState, action: PayloadAction) => {
-        state.loading = false;
-        state.registered = action?.payload;
-        state.appError = undefined;
-        state.serverError = undefined;
-      }
-    );
-    builder.addCase(
-      registerUserAction.rejected,
-      (state = initialState, action: PayloadAction) => {
-        state.loading = false;
-        state.appError = action?.payload;
-        state.serverError = action?.payload;
-      }
-    );
+    //register
+    builder.addCase(registerUserAction.pending, (state, action) => {
+      state.loading = true;
+    });
+    builder.addCase(registerUserAction.fulfilled, (state, action) => {
+      state.loading = false;
+      state.registered = action?.payload;
+      state.appError = undefined;
+      state.serverError = undefined;
+    });
+    builder.addCase(registerUserAction.rejected, (state, action) => {
+      state.loading = false;
+      state.appError = action?.payload?.message;
+      state.serverError = action?.error?.message;
+    });
   },
 });
 
-export default userSlice.reducer;
+export default userSlices.reducer;
