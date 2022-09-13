@@ -24,5 +24,7 @@ const CommentSchema = new Schema(
     timestamps: true,
   }
 );
-
+CommentSchema.virtual("id").get(function () {
+  return this._id.toHexString();
+});
 export default model<Comment>("Comment", CommentSchema);

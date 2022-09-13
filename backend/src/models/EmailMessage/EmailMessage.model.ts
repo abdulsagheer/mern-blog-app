@@ -36,5 +36,7 @@ const EmailMessageSchema = new Schema(
     timestamps: true,
   }
 );
-
+EmailMessageSchema.virtual("id").get(function () {
+  return this._id.toHexString();
+});
 export default model<EmailMessage>("EmailMessage", EmailMessageSchema);

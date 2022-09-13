@@ -20,5 +20,7 @@ const CategorySchema = new Schema(
     timestamps: true,
   }
 );
-
+CategorySchema.virtual("id").get(function () {
+  return this._id.toHexString();
+});
 export default model<Category>("Category", CategorySchema);
