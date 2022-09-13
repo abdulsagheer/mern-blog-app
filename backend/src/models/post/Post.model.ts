@@ -67,4 +67,7 @@ const PostSchema = new Schema(
   }
 );
 
+PostSchema.virtual("id").get(function () {
+  return this._id.toHexString();
+});
 export default model<Post>("Post", PostSchema);

@@ -83,6 +83,10 @@ UserSchema.virtual("posts", {
   localField: "_id",
 });
 
+// Validate ID
+UserSchema.virtual("id").get(function () {
+  return this._id.toHexString();
+});
 // ================================================================
 // Hashing the password
 // ================================================================
