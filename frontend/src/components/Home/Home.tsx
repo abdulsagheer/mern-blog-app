@@ -1,3 +1,4 @@
+// Importing Dependencies
 const poster = require("../../assets/images/poster.png");
 const Home = () => {
   return (
