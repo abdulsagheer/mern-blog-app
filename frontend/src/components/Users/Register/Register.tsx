@@ -3,7 +3,9 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 
 // Importing Dependencies
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { formValue } from "../../../Interfaces/formValues";
+import { registerUserAction } from "../../../redux/slices/users/userSlice";
 
 // Form Schema
 const formSchema = Yup.object({
@@ -18,6 +20,8 @@ const formSchema = Yup.object({
 // ================================================================
 
 const Register = () => {
+  // dispatch
+  const dispatch = useAppDispatch();
   // Initial Values
   const initialValues: formValue = {
     firstName: "",
@@ -28,6 +32,7 @@ const Register = () => {
   const formik = useFormik({
     initialValues: initialValues,
     onSubmit: (values) => {
+      dispatch(registerUserAction(values));
       console.log(values);
     },
     validationSchema: formSchema,
