@@ -3,7 +3,7 @@ import expressAsyncHandler from "express-async-handler";
 import { Request, Response } from "express";
 
 // Importing Dependencies
-import { validateMongodbId } from "../../utils/validateMongodbID";
+import { validateMongodbID } from "../../utils/validateMongodbID";
 import Category from "../../models/category/Category.model";
 
 // ================================================================

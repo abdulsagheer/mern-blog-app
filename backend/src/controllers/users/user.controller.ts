@@ -11,7 +11,7 @@ import crypto from "crypto";
 // Importing dependencies
 import User from "../../models/user/User.model";
 import { generateToken } from "./../../config/token/generateToken";
-import { validateMongodbId } from "../../utils/validateMongodbID";
+import { validateMongodbID } from "../../utils/validateMongodbID";
 import { cloudinaryUploadImg } from "../../utils/uploadToCloudinary";
 
 // API Key for Send Grid
@@ -73,7 +73,7 @@ export const userLogin = expressAsyncHandler(
 export const deleteUser = expressAsyncHandler(
   async (req: Request, res: Response) => {
     const { id } = req.params;
-    validateMongodbId(id);
+    validateMongodbID(id);
     try {
       const deletedUser = await User.findByIdAndDelete(id);
       res.json(deletedUser);
@@ -109,7 +109,7 @@ export const fetchUserDetails = expressAsyncHandler(
   async (req: Request, res: Response) => {
     // Fetch Single User Details By ID
     const { id } = req.params;
-    validateMongodbId(id);
+    validateMongodbID(id);
     try {
       const user = await User.findById(id);
       res.json(user);
@@ -126,10 +126,10 @@ export const userProfile = expressAsyncHandler(
   async (req: Request, res: Response) => {
     // User profile fetching
     const { id } = req.params;
-    validateMongodbId(id);
+    validateMongodbID(id);
 
     try {
-      const profile = await User.findById(id).populate('posts');
+      const profile = await User.findById(id).populate("posts");
       res.json(profile);
     } catch (error: any) {
       res.json(error);
@@ -144,7 +144,7 @@ export const updateUserProfile = expressAsyncHandler(
   async (req: any, res: Response) => {
     // Update User profile
     const { _id } = req?.user;
-    validateMongodbId(_id);
+    validateMongodbID(_id);
     const user = await User.findOneAndUpdate(
       { _id: new mongoose.Types.ObjectId(_id) },
       {
@@ -170,7 +170,7 @@ export const updateUserPassword = expressAsyncHandler(
     //destructure the login user
     const { _id } = req.user;
     const { password } = req.body;
-    validateMongodbId(_id);
+    validateMongodbID(_id);
     //Find the user by _id
     const user = await User.findById(_id);
 
@@ -275,7 +275,7 @@ export const blockUser = expressAsyncHandler(
   async (req: any, res: Response) => {
     // ID of logged in user and target User(the user you want to follow)
     const { id } = req.params;
-    validateMongodbId(id);
+    validateMongodbID(id);
     const user = await User.findByIdAndUpdate(
       id,
       {
@@ -297,7 +297,7 @@ export const unblockUser = expressAsyncHandler(
   async (req: any, res: Response) => {
     // ID of logged in user and target User(the user you want to follow)
     const { id } = req.params;
-    validateMongodbId(id);
+    validateMongodbID(id);
     const user = await User.findByIdAndUpdate(
       id,
       {

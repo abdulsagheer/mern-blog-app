@@ -4,7 +4,7 @@ import { Request, Response } from "express";
 
 // Importing Dependencies
 import Comment from "../../models/comment/Comment.model";
-import { validateMongodbId } from "../../utils/validateMongodbID";
+import { validateMongodbID } from "../../utils/validateMongodbID";
 
 // ================================================================
 // Create Comment
@@ -51,7 +51,7 @@ export const fetchAllComment = expressAsyncHandler(
 export const fetchSingleComment = expressAsyncHandler(
   async (req: any, res: Response) => {
     const { id } = req.params;
-    validateMongodbId(id);
+    validateMongodbID(id);
     try {
       const comment = await Comment.findById(id);
       res.json(comment);
@@ -68,7 +68,7 @@ export const fetchSingleComment = expressAsyncHandler(
 export const updateComment = expressAsyncHandler(
   async (req: any, res: Response) => {
     const { id } = req.params;
-    validateMongodbId(id);
+    validateMongodbID(id);
     try {
       const comment = await Comment.findByIdAndUpdate(
         id,
@@ -93,7 +93,7 @@ export const updateComment = expressAsyncHandler(
 export const deleteComment = expressAsyncHandler(
   async (req: any, res: Response) => {
     const { id } = req.params;
-    validateMongodbId(id);
+    validateMongodbID(id);
     try {
       const comment = await Comment.findByIdAndDelete(id);
       res.json(comment);
