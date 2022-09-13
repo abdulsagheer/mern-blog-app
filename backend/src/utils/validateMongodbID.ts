@@ -1,8 +1,9 @@
+import { ObjectId } from "mongoose";
 // Importing Libraries
 import mongoose from "mongoose";
 
 // Function to Validate MongoDB ID
-export const validateMongodbId = (id: any) => {
-  const isValid = mongoose.Types.ObjectId.isValid(id);
-  if (!isValid) throw new Error(`Invalid ID: ${id}`);
+export const validateMongodbID = (id: any) => {
+  if (!mongoose.Types.ObjectId.isValid(id))
+    throw new Error("User id is not valid or found");
 };
