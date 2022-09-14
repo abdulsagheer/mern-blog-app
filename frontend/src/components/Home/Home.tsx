@@ -1,6 +1,6 @@
 // Importing Dependencies
 const poster = require("../../assets/images/poster.png");
-const Home = () => {
+export const Home = () => {
   return (
     <>
       <section className="pb-10 bg-gray-800">
@@ -33,5 +33,3 @@ const Home = () => {
     </>
   );
 };
-
-export default Home;

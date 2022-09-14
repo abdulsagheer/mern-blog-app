@@ -1,5 +1,6 @@
 // Importing Libraries
 import { useFormik } from "formik";
+import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 
 // Importing Dependencies
@@ -19,7 +20,7 @@ const formSchema = Yup.object({
 //Register
 // ================================================================
 
-const Register = () => {
+export const Register: any = () => {
   // dispatch
   const dispatch = useAppDispatch();
   // Initial Values
@@ -37,6 +38,18 @@ const Register = () => {
     },
     validationSchema: formSchema,
   });
+
+  // select state from store
+  const storeData = useAppSelector((state) => state.users);
+  const { loading, registered, appError, serverError } = storeData;
+
+  // Navigate User
+  const navigate = useNavigate();
+  console.log(storeData);
+
+  if (registered) {
+    return navigate("/login");
+  }
 
   return (
     <section className="relative py-20 2xl:py-40 bg-gray-800 overflow-hidden">
@@ -58,6 +71,11 @@ const Register = () => {
                 <form onSubmit={formik.handleSubmit}>
                   <h3 className="mb-10 text-2xl text-white font-bold font-heading">
                     Register Account–
+                    {appError || serverError ? (
+                      <div className="text-red-400">
+                        {appError} {serverError}
+                      </div>
+                    ) : null}
                   </h3>
                   {/* First name */}
                   <div className="flex items-center pl-6 mb-3 bg-white rounded-full">
@@ -254,11 +272,13 @@ const Register = () => {
 
                   <div className="inline-flex mb-10"></div>
 
+                  {/* Check for loading */}
+
                   <button
                     type="submit"
                     className="py-4 w-full bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-full transition duration-200"
                   >
-                    Register
+                    {loading ? "Loading..." : "Register"}
                   </button>
                 </form>
               </div>
@@ -269,5 +289,3 @@ const Register = () => {
     </section>
   );
 };
-
-export default Register;
