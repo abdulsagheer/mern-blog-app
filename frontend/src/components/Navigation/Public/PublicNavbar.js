@@ -44,7 +44,7 @@ const PublicNavbar = () => {
                   <BookOpenIcon className="h-10 w-10 text-yellow-200" />
                 </div>
                 <div className="hidden md:ml-6 md:flex md:items-center md:space-x-4">
-                  {navigation.map((item) => (
+                  {navigation.map(item => (
                     <Link
                       key={item.name}
                       to={item.href}
@@ -93,7 +93,7 @@ const PublicNavbar = () => {
 
           <Disclosure.Panel className="md:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-              {navigation.map((item) => (
+              {navigation.map(item => (
                 <a
                   key={item.name}
                   href={item.href}

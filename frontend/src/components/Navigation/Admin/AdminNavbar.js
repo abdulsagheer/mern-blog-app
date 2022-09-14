@@ -1,6 +1,7 @@
 /* This example requires Tailwind CSS v2.0+ */
 import { Fragment } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
+import { useDispatch } from "react-redux";
 
 import { Link } from "react-router-dom";
 import {
@@ -11,6 +12,7 @@ import {
   LogoutIcon,
 } from "@heroicons/react/outline";
 import { PlusIcon } from "@heroicons/react/solid";
+import { logoutAction } from "../../../redux/slices/users/userSlice";
 
 const navigation = [
   { name: "Home", href: "/", current: true },
@@ -31,7 +33,8 @@ const AdminNavbar = () => {
     { name: "Your Profile", href: `/profile` },
     { name: "Change your password", href: "/update-password" },
   ];
-
+  //logout
+  const dispatch = useDispatch();
   return (
     <Disclosure as="nav" className="bg-green-800">
       {({ open }) => (
@@ -55,7 +58,7 @@ const AdminNavbar = () => {
                   <BookOpenIcon className="h-10 w-10 text-yellow-200" />
                 </div>
                 <div className="hidden md:ml-6 md:flex md:items-center md:space-x-4">
-                  {navigation.map(item => (
+                  {navigation.map((item) => (
                     <Link
                       key={item.name}
                       to={item.href}
@@ -65,7 +68,7 @@ const AdminNavbar = () => {
                           : "text-gray-300 hover:bg-gray-700 hover:text-white",
                         "px-3 py-2 rounded-md text-sm font-medium"
                       )}
-                      aria-current={item.current ? "page" : undefined}
+                      ariaCurrent={item.current ? "page" : undefined}
                     >
                       {item.name}
                     </Link>
@@ -88,6 +91,7 @@ const AdminNavbar = () => {
                   </Link>
                   {/* Logout */}
                   <button
+                    onClick={() => dispatch(logoutAction())}
                     type="button"
                     className="relative inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-500 hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-indigo-500"
                   >
@@ -127,7 +131,7 @@ const AdminNavbar = () => {
                             static
                             className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
                           >
-                            {userNavigation.map(item => (
+                            {userNavigation.map((item) => (
                               <Menu.Item key={item.name}>
                                 {({ active }) => (
                                   <a
@@ -154,7 +158,7 @@ const AdminNavbar = () => {
 
           <Disclosure.Panel className="md:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-              {navigation.map(item => (
+              {navigation.map((item) => (
                 <Link
                   to={`${item.href}`}
                   key={item.name}
@@ -190,7 +194,7 @@ const AdminNavbar = () => {
                 </button>
               </div>
               <div className="mt-3 px-2 space-y-1 sm:px-3">
-                {userNavigation.map(item => (
+                {userNavigation.map((item) => (
                   <a
                     key={item.name}
                     href={item.href}
