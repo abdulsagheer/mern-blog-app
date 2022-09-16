@@ -27,7 +27,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-const AdminNavbar = () => {
+const AdminNavbar= () => {
   //Navigation
   const userNavigation = [
     { name: "Your Profile", href: `/profile` },
