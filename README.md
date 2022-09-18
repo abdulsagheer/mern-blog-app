@@ -1,1 +1,1 @@
-# MERN-blog-app
+# MERN-BLOG-APP
